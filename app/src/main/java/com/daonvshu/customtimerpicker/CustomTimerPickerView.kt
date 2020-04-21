@@ -1,4 +1,4 @@
-package com.xinyi.customtimerpicker
+package com.daonvshu.customtimerpicker
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable

@@ -1,4 +1,4 @@
-package com.xinyi.customtimerpicker
+package com.daonvshu.customtimerpicker
 
 import org.junit.Test
 
