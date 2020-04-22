@@ -10,14 +10,19 @@ class MainActivity : AppCompatActivity() {
 
     private val dateFormat = SimpleDateFormat("yyyy-MM", Locale.getDefault())
 
+    private var lastSt = 0L
+    private var lastEt = 0L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         hello.setOnClickListener {
             CustomTimerPickerView(this).showPicker { st, et ->
+                lastSt = st
+                lastEt = et
                 hello.text = "${dateFormat.format(st)} ~ ${dateFormat.format(et)}"
-            }
+            }.setTime(lastSt, lastEt)
         }
     }
 }

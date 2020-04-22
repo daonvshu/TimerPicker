@@ -34,7 +34,7 @@ class CustomTimerPickerView(private val context: Context) : CanShow, OnWheelChan
         }
         popView.tv_confirm.setOnClickListener {
             selectCallback?.invoke(getTime(popView.id_st_year, popView.id_st_month),
-                getTime(popView.id_et_year, popView.id_et_month))
+                getTime(popView.id_et_year, popView.id_et_month, true) - 1)
             hide()
         }
 
@@ -116,18 +116,45 @@ class CustomTimerPickerView(private val context: Context) : CanShow, OnWheelChan
         }
     }
 
-    private fun getTime(yearView: WheelView, monthView: WheelView) : Long {
+    private fun getTime(yearView: WheelView, monthView: WheelView, nextMonth: Boolean = false) : Long {
         val calendar = Calendar.getInstance()
-        calendar.set(yearView.value(yearData), monthView.value(monthData), 0)
+        calendar.set(yearView.value(yearData), monthView.value(monthData) - 1, 1, 0, 0, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        if (nextMonth) {
+            calendar.add(Calendar.MONTH, 1)
+        }
         return calendar.time.time
     }
 
-    fun showPicker(selectCallback: ((Long, Long)->Unit)? = null) {
+    fun showPicker(selectCallback: ((Long, Long)->Unit)? = null) : CustomTimerPickerView {
         this.selectCallback = selectCallback
         initView()
         if (!isShow) {
             popWindow.showAtLocation(popView, 80, 0, 0)
         }
+        return this
+    }
+
+    fun setTime(st: Long, et: Long) {
+        if (st == 0L || et == 0L) {
+            return
+        }
+        val calendar = Calendar.getInstance()
+        val yearCur = calendar.get(Calendar.YEAR)
+
+        calendar.time = Date(st)
+        val yearSt = calendar.get(Calendar.YEAR)
+        if (yearSt in yearCur - 50..yearCur) {
+            popView.id_st_year.currentItem = yearSt - (yearCur - 50)
+        }
+        popView.id_st_month.currentItem = calendar.get(Calendar.MONTH)
+
+        calendar.time = Date(et)
+        val yearEt = calendar.get(Calendar.YEAR)
+        if (yearEt in yearCur - 50..yearCur) {
+            popView.id_et_year.currentItem = yearEt - (yearCur - 50)
+        }
+        popView.id_et_month.currentItem = calendar.get(Calendar.MONTH)
     }
 }
 
